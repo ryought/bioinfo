@@ -18,15 +18,25 @@ S1 = 'GGAGTGAGGGGAGCAGTTGGGCTGAAGATGGTCAACGCCGAGGGAACGGTAAAGGCGACGGAGCTGTGGCAGAC
 S2 = 'CGCATGCGGAGTGAGGGGAGCAGTTGGGAACAGATGGTCCCGCCGAGGGACCGGTGGGCAGACGGGGCCAGCTGTGGCAGACACTGGCTTCTAACCACCGAACGTTCTTTCCGCTCCGGG'
 
 
-_M  = [[T for _ in range(len(S2))] for _ in range(len(S1))]
-_Ix = [[T for _ in range(len(S2))] for _ in range(len(S1))]
-_Iy = [[T for _ in range(len(S2))] for _ in range(len(S1))]
+_M  = [[T for _ in range(len(S2)+1)] for _ in range(len(S1)+1)]
+_Ix = [[T for _ in range(len(S2)+1)] for _ in range(len(S1)+1)]
+_Iy = [[T for _ in range(len(S2)+1)] for _ in range(len(S1)+1)]
+
+# print(_M)
 
 _M[0][0] = 0
 
-for i in range(len(S2)):
-    
+for j in range(len(S2)+1):
+    _M[0][j] = -d - (j-1)*e if j>0 else 0
+    _Ix[0][j] = -1*math.inf
+    _Ix[0][j] = -1*math.inf
 
+for i in range(len(S1)+1):
+    _M[i][0] = -d - (i-1)*e if i>0 else 0
+    _Ix[i][0] = -1*math.inf
+    _Iy[i][0] = -1*math.inf
+
+# print(_M)
 
 def c(x, y):
     if x == y:
@@ -43,7 +53,7 @@ def M(i, j):
             M(i-1, j-1),
             Ix(i-1, j-1),
             Iy(i-1, j-1)
-            ) + c(S1[i], S2[j])
+            ) + c(S1[i-1], S2[j-1])
     return _M[i][j]
 
 def Ix(i, j):
@@ -70,4 +80,5 @@ def Iy(i, j):
     return _Iy[i][j]
 
 
-print(M(len(S1)-1, len(S2)-1))
+print(M(len(S1), len(S2)), Ix(len(S1), len(S2)), Iy(len(S1), len(S2)))
+# print(_M, _Ix, _Iy)
