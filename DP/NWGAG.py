@@ -81,4 +81,17 @@ def Iy(i, j):
 
 
 print(M(len(S1), len(S2)), Ix(len(S1), len(S2)), Iy(len(S1), len(S2)))
+
+alignment = []
+
+# alignmentにどんどん足していく
+def backtrack():
+
+    while x != 0 and y != 0:
+        # 由来を探す
+
+        # 更新
+        x, y = 
+
+
 # print(_M, _Ix, _Iy)
