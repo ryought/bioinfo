@@ -26,20 +26,20 @@ N = len(a) # datasize
 def count(seq):
     x = [0,0,0,0]
     # 最初の文字
-    if seq[0] == 'A' or seq[0] == 'U':
+    if seq[0] in {'A', 'U'}:
         x[2] += 1
-    elif seq[0] == 'C' or seq[0] == 'G':
+    elif seq[0] in {'C', 'G'}:
         x[3] += 1
     # 最後の文字
-    if seq[-1] == 'A' or seq[-1] == 'U':
+    if seq[-1] in {'A', 'U'}:
         x[2] += 1
-    elif seq[-1] == 'C' or seq[-1] == 'G':
+    elif seq[-1] in {'C', 'G'}:
         x[3] += 1
     # その間は普通に数数える
     for i in seq[1:-1]:
-        if i == 'A' or i == 'U':
+        if i in {'A', 'U'}:
             x[0] += 1
-        elif i == 'C' or i == 'G':
+        elif i in {'C', 'G'}:
             x[1] += 1
     return x
 
