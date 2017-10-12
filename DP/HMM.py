@@ -100,4 +100,5 @@ def traceback(lV):
 
 # 実行
 run_hyoume(lV)
-print(traceback(lV))
+t = traceback(lV)
+print('result:', ''.join(map(str, t)))
