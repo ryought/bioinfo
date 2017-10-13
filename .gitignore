@@ -2,3 +2,4 @@ pdf/
 *__pycache__/
 *.pdf
 .idea/
+*.zip
