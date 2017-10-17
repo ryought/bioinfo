@@ -46,12 +46,12 @@ def count(seq):
             x[1] += 1
     return x
 
-
+# Ax = b, A:結合本数のデータ x:結合エネルギーのパラメータ b:エネルギーの実験値
 A = [count(seq) for (_, seq, energy) in a]
 b = [float(energy) for (_, _ , energy) in a]
 
 
-
+# object function
 def f(x):
     S = 0
     for i in range(N):
@@ -89,24 +89,50 @@ def grad_f(x):
 f([0,0,0,0])
 print(grad_f([0,0,0,0]))
 
-def run(alpha=0.0001, initial_x = [0,0,0,0]):
+def run(alpha=0.0001, initial_x = [1,1,-1, -1]):
     fs = []
     x = initial_x  # 各部分のエネルギー [G(AU) G(GC) G(tAU) G(tGC)]
     print(alpha) # ステップサイズ
     print(x)
 
-    for k in range(10000):  # 勾配降下回数
+    for k in range(100):  # 勾配降下回数
         fs.append(f(x))
         x = add(x, scalar(-alpha, grad_f(x)))
         # x = x + alpha * grad_f(x)
-
-
     print(x)
-    return fs
+    return x, fs
+
+def estimation(x):
+    b0 = [0 for _ in range(N)]
+    for i in range(N):
+        b0[i] = A[i][0]*x[0] + A[i][1]*x[1] + A[i][2]*x[2] + A[i][3]*x[3]
+    return b0
 
 
-fs = run()
-log = np.array(fs)
-print(log.shape)
-plt.plot(log)
+alphas = [0.0001, 0.01, 0.0002]
+
+for i, alpha in enumerate(alphas):
+    x, fs = run(alpha=alpha)
+    log = np.array(fs)
+
+    print(len(alphas))
+    # 収束の様子
+    plt.subplot(len(alphas), 2, 2*i + 1)
+    plt.plot(log)
+    plt.title('alpha={0}'.format(alpha))
+
+    # 散布図
+    # b0(予測値) vs b(実験値)でプロットの作成
+    b0 = np.array(estimation(x))
+    plt.subplot(len(alphas), 2, 2*i + 2)
+    plt.scatter(b0, b)
+    plt.xlabel('predicted')
+    plt.ylabel('actual experimental')
 plt.show()
+
+## numpyを使って解析的に求める
+AA = np.array(A)
+bb = np.array(b)
+x_analytic = np.dot(np.dot(np.linalg.inv(np.dot(AA.T, AA)), AA.T),  bb)
+print(x_analytic)
+
