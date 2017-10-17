@@ -89,13 +89,13 @@ def grad_f(x):
 f([0,0,0,0])
 print(grad_f([0,0,0,0]))
 
-def run(alpha=0.0001, initial_x = [1,1,-1, -1]):
+def run(alpha=0.0001, initial_x = [1,1,-1, -1], iteration=100):
     fs = []
     x = initial_x  # 各部分のエネルギー [G(AU) G(GC) G(tAU) G(tGC)]
     print(alpha) # ステップサイズ
     print(x)
 
-    for k in range(100):  # 勾配降下回数
+    for k in range(iteration):  # 勾配降下回数
         fs.append(f(x))
         x = add(x, scalar(-alpha, grad_f(x)))
         # x = x + alpha * grad_f(x)
@@ -109,7 +109,7 @@ def estimation(x):
     return b0
 
 
-alphas = [0.0001, 0.01, 0.0002]
+alphas = [0.00001, 0.00005,  0.0001, 0.0005]
 
 for i, alpha in enumerate(alphas):
     x, fs = run(alpha=alpha)
@@ -117,22 +117,24 @@ for i, alpha in enumerate(alphas):
 
     print(len(alphas))
     # 収束の様子
-    plt.subplot(len(alphas), 2, 2*i + 1)
-    plt.plot(log)
-    plt.title('alpha={0}'.format(alpha))
-
-    # 散布図
-    # b0(予測値) vs b(実験値)でプロットの作成
-    b0 = np.array(estimation(x))
-    plt.subplot(len(alphas), 2, 2*i + 2)
-    plt.scatter(b0, b)
-    plt.xlabel('predicted')
-    plt.ylabel('actual experimental')
+    plt.plot(log, label='alpha={0}'.format(alpha))
+plt.legend()
 plt.show()
+
+# 散布図
+# b0(予測値) vs b(実験値)でプロットの作成
+b0 = np.array(estimation(x))
+plt.scatter(b0, b)
+plt.xlabel('predicted')
+plt.ylabel('actual experimental')
+plt.show()
+
+## 最終的な収束値を見つける
+x, _ = run(alpha=0.0001, iteration=10000)
 
 ## numpyを使って解析的に求める
 AA = np.array(A)
 bb = np.array(b)
 x_analytic = np.dot(np.dot(np.linalg.inv(np.dot(AA.T, AA)), AA.T),  bb)
-print(x_analytic)
+print('by numpy', x_analytic, 'original',  x)
 
