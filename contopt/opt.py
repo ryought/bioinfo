@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import numpy as np
+import matplotlib.pyplot as plt
 
 # import csv
 # tsv = csv.reader(file(r""))
@@ -50,15 +51,14 @@ A = [count(seq) for (_, seq, energy) in a]
 b = [float(energy) for (_, _ , energy) in a]
 
 
-print(A)
-print(b)
 
 def f(x):
     S = 0
     for i in range(N):
-        S += b[i] - (A[i][0]*x[0] + A[i][1]*x[1] + A[i][2]*x[2] + A[i][3]*x[3])
+        S += (b[i] - (A[i][0]*x[0] + A[i][1]*x[1] + A[i][2]*x[2] + A[i][3]*x[3]))**2
     return S
 
+print(f([0,0.1,0.2,2]))
 
 def add(x, y):
     assert len(x) == len(y)
@@ -67,7 +67,6 @@ def add(x, y):
         z[i] = x[i] + y[i]
     return z
 
-print(add([1,2,3], [2,2,2]))
 
 
 def scalar(c, x):
@@ -76,32 +75,38 @@ def scalar(c, x):
         z[i] = c * x[i]
     return z
 
-print(scalar(-1.2, [2,2,2]))
 
 def grad_f(x):
     # xを受けて$-\frac{\Delta f}{\Delta x}$ を返す
     # とりあえず数値微分
-    h = 0.0000001
-    return [f(add(x, [h, 0, 0, 0])) - f(x),
-            f(add(x, [0, h, 0, 0])) - f(x),
-            f(add(x, [0, 0, h, 0])) - f(x),
-            f(add(x, [0, 0, 0, h])) - f(x)] 
+    h = 0.00001
+    return [(f(add(x, [h, 0, 0, 0])) - f(x))/h,
+            (f(add(x, [0, h, 0, 0])) - f(x))/h,
+            (f(add(x, [0, 0, h, 0])) - f(x))/h,
+            (f(add(x, [0, 0, 0, h])) - f(x))/h] 
 
 
 f([0,0,0,0])
 print(grad_f([0,0,0,0]))
 
-def run(alpha=0.0001, initial_x = [1,1,1,1]):
-    xs = [] # 途中経過の集合
+def run(alpha=0.0001, initial_x = [0,0,0,0]):
+    fs = []
     x = initial_x  # 各部分のエネルギー [G(AU) G(GC) G(tAU) G(tGC)]
     print(alpha) # ステップサイズ
+    print(x)
 
-    for k in range(100):  # 勾配降下回数
+    for k in range(10000):  # 勾配降下回数
+        fs.append(f(x))
         x = add(x, scalar(-alpha, grad_f(x)))
-        print(x)
         # x = x + alpha * grad_f(x)
-        xs.append(x)
-    return xs
 
 
-# run()
+    print(x)
+    return fs
+
+
+fs = run()
+log = np.array(fs)
+print(log.shape)
+plt.plot(log)
+plt.show()
