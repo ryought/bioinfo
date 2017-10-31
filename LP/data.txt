@@ -1,0 +1,13 @@
+Maximize
+obj : x1 + x2
+
+Subject To
+p: x1 + 2x2 <= 4
+q: 4x1 + 2x2 <= 12
+r: -1x1 + x2 <= 1
+
+Bounds
+0 <= x1
+0 <= x2
+
+End

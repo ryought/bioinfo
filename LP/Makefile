@@ -8,7 +8,8 @@ cplex: cplex.c
 	$(CC) $@.o -lglpk -lm -o $@; \
 
 run:
-	./a.out
+	./cplex
+
 debug:
 	gcc -g 
 	lldb a.out
