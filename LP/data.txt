@@ -5,6 +5,7 @@ Subject To
 p: x1 + 2x2 <= 4
 q: 4x1 + 2x2 <= 12
 r: -1x1 + x2 <= 1
+s: x1 = 0
 
 Bounds
 0 <= x1

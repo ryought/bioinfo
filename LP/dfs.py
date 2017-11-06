@@ -15,15 +15,13 @@ def branch(position):
 
         # deep copy https://stackoverflow.com/questions/2612802/how-to-clone-or-copy-a-list
         n1, n2 = list(position), list(position)
-        n1[i] = 1
-        n2[i] = 0
+        n1[i] = 0
+        n2[i] = 1
         return [n1, n2]
 
     except ValueError:
         return []
 
-
-print(branch([1, 0, 1, 1]))
 
 
 # FIX: 0 or 1, UNFIXED: -1
@@ -37,5 +35,6 @@ def dfs():
         next_pos = branch(x)
         stack.extend(next_pos)
 
-
-dfs()
+if __name__ == "__main__":
+    print(branch([1, 0, 1, 1]))
+    dfs()

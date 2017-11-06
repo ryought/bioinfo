@@ -1,5 +1,8 @@
 from swiglpk import *
+
 from dfs import branch
+
+import sys
 
 def solve_with_relax(lp2, bound):
     lp = glp_create_prob()
@@ -11,7 +14,8 @@ def solve_with_relax(lp2, bound):
             # i th column has fixed value
             glp_set_col_bnds(lp, i+1, GLP_FX, value, value)
         else:
-            print('x({0}) was unfixed'.format(i+1))
+            pass
+            # print('x({0}) was unfixed'.format(i+1))
             # value == -1 and unfixed
             # glp_set_col_bnds(lp, i+1, GLP_LO, 0, 0)
     # solve
@@ -44,9 +48,9 @@ def is_leaf_node(x):
             return False
     return True
 
-def main():
+def main(num):
     lp = glp_create_prob()
-    glp_read_lp(lp, None, "data2.txt")
+    glp_read_lp(lp, None, "data_out_{0}.txt".format(num))
 
     # init = [-1, -1, ... (repeated for numbers of variables)]
     init = [-1 for _ in range(glp_get_num_rows(lp))]
@@ -66,6 +70,7 @@ def main():
             if is_leaf_node(x):
                 # leaf node
                 leaf_LBs.append(result)
+                # sort by x1 in (x1, x2)
                 max_leaf_LB = max(leaf_LBs, key=lambda item: item[0])[0]
 
             else:
@@ -75,7 +80,9 @@ def main():
                     # prune
                     print('prune')
                 elif is_satisfies_binary_constraint(result[1]):
-                    print('found good solutino')
+                    print('prune2')
+                    leaf_LBs.append(result)
+                    max_leaf_LB = max(leaf_LBs, key=lambda item: item[0])[0]
                 else:
                     # branching
                     next_pos = branch(x)
@@ -87,7 +94,10 @@ def main():
 
     glp_delete_prob(lp)
     print(leaf_LBs)
+    max_leaf_LB = max(leaf_LBs, key=lambda item: item[0])
+    print('solution: ', max_leaf_LB)
 
 
 if __name__ == '__main__':
-    main()
+    print(sys.argv)
+    main(sys.argv[1])
