@@ -4,9 +4,6 @@ dfs.py
 depth first search for 2-tree
 """
 
-def solve_with_relax(param):
-    # param = {1:1, 2:0, 3:1}
-    print('not ywe')
 
 # f:: (1, 0, -1, -1) -> (1, 0, 1, -1) and (1, 0, 0, -1)
 def branch(position):

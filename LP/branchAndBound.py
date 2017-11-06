@@ -4,7 +4,10 @@ from dfs import branch
 
 import sys
 
+number_of_call = 0
+
 def solve_with_relax(lp2, bound):
+    global number_of_call
     lp = glp_create_prob()
     glp_copy_prob(lp, lp2, GLP_ON)
     # bound = (0, 1, -1, -1, -1)
@@ -20,6 +23,7 @@ def solve_with_relax(lp2, bound):
             # glp_set_col_bnds(lp, i+1, GLP_LO, 0, 0)
     # solve
     glp_simplex(lp, None)
+    number_of_call += 1
 
     result = []
     for i in range(glp_get_num_cols(lp)):
@@ -48,12 +52,12 @@ def is_leaf_node(x):
             return False
     return True
 
-def main(num):
+def main(filename):
     lp = glp_create_prob()
-    glp_read_lp(lp, None, "data_out_{0}.txt".format(num))
+    glp_read_lp(lp, None, filename)
 
     # init = [-1, -1, ... (repeated for numbers of variables)]
-    init = [-1 for _ in range(glp_get_num_rows(lp))]
+    init = [-1 for _ in range(glp_get_num_cols(lp))]
 
     stack = []
     stack.append(init)
@@ -63,10 +67,9 @@ def main(num):
 
     while stack:
         x = stack.pop()
-        print('processing', x)
+        print('processing', x, len(x))
         result = solve_with_relax(lp, x)
         if result:
-            print('[**]', result[0], result[1])
             if is_leaf_node(x):
                 # leaf node
                 leaf_LBs.append(result)
@@ -101,3 +104,4 @@ def main(num):
 if __name__ == '__main__':
     print(sys.argv)
     main(sys.argv[1])
+    print('call', number_of_call)
