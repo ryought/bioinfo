@@ -49,7 +49,7 @@ def main(number):
     # combine all
     cplex_out = "" + obj + subject + bound
 
-    with open('data_out_{0}.txt'.format(number), 'wt') as f:
+    with open('lp-datas/data_out_{0}.txt'.format(number), 'wt') as f:
         f.write(cplex_out)
 
 
