@@ -3,3 +3,10 @@ pdf/
 *.pdf
 .idea/
 *.zip
+
+# Binary files
+cplex
+*.o
+
+# python
+*.pyc
