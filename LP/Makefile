@@ -13,7 +13,16 @@ run:
 debug:
 	gcc -g 
 	lldb a.out
+
 sanitize:
 	gcc -g -fsanitize=address 
+
 clean:
-	rm *.out
+	rm *.o cplex
+
+MD = pandoc -f markdown_github+footnotes+header_attributes+tex_math_dollars+compact_definition_lists+raw_tex+latex_macros -V documentclass=ltjarticle -V geometry:a4paper -V geometry:margin=3cm -V mainfont="Asana Math" -V linestretch=0.9 -V header-includes="\usepackage[version=3]{mhchem} \usepackage{url} \usepackage{wrapfig} \usepackage{graphicx}" --latex-engine=lualatex
+.SUFFIXES: .md .pdf
+.PHONY: all
+all: report.pdf
+.md.pdf: 
+	$(MD) $< -o $@

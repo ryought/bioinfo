@@ -1,0 +1,14 @@
+Maximize
+obj : 3x1 + x2 + x3
+
+Subject To
+p: x1 + x2 + 3x3 <= 30
+q: 2x1 + 2x2 + 5x3 <= 24
+r: 4x1 + x2 + 2x3 <= 36
+
+Bounds
+0 <= x1
+0 <= x2
+0 <= x3
+
+End

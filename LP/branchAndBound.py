@@ -34,6 +34,7 @@ def solve_with_relax(lp2, bound):
         # optimal solution found
         opt = glp_get_obj_val(lp)
         glp_delete_prob(lp)
+        print('opt', opt, result)
         return (opt, result)
     else:
         # not optimal

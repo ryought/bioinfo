@@ -4,13 +4,6 @@
 import argparse
 
 def main(number):
-    # parse argument
-    # psr = argparse.ArgumentParser()
-    # psr.add_argument('-f', '--file', default='', type=int)
-    # args = psr.parse_args()
-
-    # main function
-
     # d = {0: (price, [items])}
     d = {}
     with open('ca-data/{0}.txt'.format(number), 'rt') as f:
