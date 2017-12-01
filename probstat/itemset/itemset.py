@@ -3,11 +3,9 @@
 
 def computeSupport(p, T):
     """supportを計算する
-    Args:
-            p : パターン
-            T : データベース
-    Returns:
-        n : int 出現回数
+    p: パターン
+    T: データベース
+    n: int 出現回数
     """
     n = 0
     for t in T:
@@ -17,17 +15,17 @@ def computeSupport(p, T):
 
 def computeDenotation(P, T):
     """外延 denotation T(P) = { t \in T : P \subset t } を計算する
-    @params P(set): パターン
-    @params T(list): データベース．ここに含まれるsetのうち，Pを含むものを返す
-    @return list: パターンを含む要素の集合 データベースの部分集合
+    P(set): パターン
+    T(list): データベース．ここに含まれるsetのうち，Pを含むものを返す
+    list: パターンを含む要素の集合 データベースの部分集合
     """
     return [t for t in T if P.issubset(t)]
 
 def computeClosure(p, T):
     """closure(pを含むTの要素全てが共通に含むパターン，つまり全てのandをとったもの)を計算する
-    @params p(set) pattern
-    @params T(list) database
-    @return c(set) closure
+    p(set) pattern
+    T(list) database
+    c(set) closure
     """
     C = {}
     for t in T:
@@ -44,7 +42,6 @@ def is_ppc(C1, C2, i):
     """ check if C2 is prefix preserving closure extension of C1
     """
     c1, c2 = sorted(C1), sorted(C2)
-    print('ppc', c1, c2, i)
     for k in range(len(c1)):
         if i <= c2[k]:
             # return False
@@ -57,9 +54,7 @@ def computeClosureTail(P, T):
     global M
     for i in range(1, M+1):
         Z = set([j for j in range(1, i+1)])
-        print(computeClosure(P&Z, T), P)
         if computeClosure( P & Z, T ) == P:
-            print('tail', i)
             return i
     print('not found')
 
@@ -70,7 +65,6 @@ def is_ppc2(C1, C2, i, T):
     """
     tail = computeClosureTail(C1, T)
     L = set([j for j in range(1, i-1+1)])
-    # print(C1, C2, L, i, tail)
     if i >= tail and (C1 & L == C2 & L):
         return True
     else:
@@ -90,11 +84,10 @@ def backtrack2(C, i, T):
 # LCM
 def backtrack(C, i, T, M, theta=3):
     global patternDB
-    print('\033[31m[track]', C, '\033[m')
-    patternDB.append((C, computeSupport(C, T)))
-    # print(list(range(i+1, M+1)))
+    support = computeSupport(C, T)
+    patternDB.append((C, support))
+    print('\033[31m[track]', C, '\033[m', support)
     for j in range(i+1, M+1):
-        # print('j=', j, C, i, T)
         if j in C:
             continue
         P = C | set([j])
@@ -103,17 +96,18 @@ def backtrack(C, i, T, M, theta=3):
             continue
         C2 = computeClosure(P, T)
         if is_ppc2(C, C2, j, T) == False:
-            # if is_ppc(C, C2, j) == False:
             continue
-        # print('induce', C2, 'from', C, 'in', j)
         backtrack(C2, j, computeDenotation(P, T), M, theta=theta)
 
 
 def computeFreq(T):
+    """supportの大きいpatternをDFSで見つける"""
     backtrack2(set(), 0, T)
 
 
 def computeLCM(T, M, theta):
+    """LCMアルゴリズムでfrequentなclosed patternを見つける
+    グローバル変数patternDBに出現頻度について降順に格納される"""
     global patternDB
     patternDB = []
     C = computeClosure({}, T)
@@ -122,6 +116,8 @@ def computeLCM(T, M, theta):
     print(patternDB)
 
 def read_db_from_file(path):
+    """トランザクションデータベースをテキストファイルから作る
+    """
     d = []
     do = []
     di = {}
@@ -137,6 +133,7 @@ def read_db_from_file(path):
     return d, len(di)
 
 def main():
+    # スライドのサンプルデータ
     T = [{1,2,5,6,7,9},
          {2,3,4,5},
          {1,2,7,8,9},
@@ -144,51 +141,14 @@ def main():
          {2,7,9},
          {2}]
     M = 9
-    for t in T:
-        print(t)
-    print(T[1])
-    for x in T[4]:
-        print('a', x)
-    print(T[4], sorted(T[4]))
-    print({1,2,3,4} == {1,2,3,4})
-    print({1,2} == {2})
-    print(T[1] | T[2])
-    print(T[1] & T[2])
-    print('support', computeSupport({1,2}, T))
-    print('support', computeSupport({1}, T))
-    print('support', computeSupport({2}, T))
-    print('support', computeSupport(set(), T))
-    print('closure', computeClosure({1,2}, T))
-    print('closure', computeClosure({1,9}, T))
-    print('closure', computeClosure({4}, T))
-    print('closure of empty set', computeClosure(set(), T))
-    print('denota', computeDenotation({1}, T))
-    print('denota', computeDenotation(set(), T))
-    print('ppc', is_ppc({1,7,9}, {1,2,5,6,7,9}, 3))
-    print('ppc', is_ppc({1,2,7,9}, {1,2,5,6,7,9}, 5))
-    print('ppc', is_ppc({1,2,7,9}, {1,2,5,6,7,9}, 10))
-    print('ppc', is_ppc({1,2,7,9}, {1,2,5,6,7,9}, 10))
-    computeFreq(T)
-
     computeLCM(T, M, theta=1)
 
-    print('ppc', is_ppc({2}, {2,3,4,5}, 2))
-    print('ppc', is_ppc({2}, {2,3,4,5}, 3))
-    print('closure', computeClosure({2,3}, T))
 
-
-    for i in range(1, M-1):
-        print('closure', i, computeClosure(set([i]), T))
-        print('ppc', is_ppc(set(), computeClosure(set([i]), T), i))
-
-    print('ppc2', is_ppc2({2}, {2,3,4,5}, 2, T))
-    print('ppc2', is_ppc2({2}, {2,3,4,5}, 3, T))
-    print('closure', computeClosure({4}, T))
-    print('closuretail', computeClosureTail({2,3,4,5}, T))
-    print('closuretail', computeClosureTail({1,2,7,9}, T))
-
+    # 実データ 時間計測する
+    import timeit
     T2, M = read_db_from_file('../data/itemset_mining/retail_1based_500.txt')
-    computeLCM(T2, M, theta=10)
+    print(timeit.timeit(lambda: computeLCM(T2, M, theta=10), number=10)/10, 's')
+
 
 if __name__ == '__main__':
     main()
