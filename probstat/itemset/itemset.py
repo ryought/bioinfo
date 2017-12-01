@@ -89,7 +89,9 @@ def backtrack2(C, i, T):
 
 # LCM
 def backtrack(C, i, T, M, theta=3):
+    global patternDB
     print('\033[31m[track]', C, '\033[m')
+    patternDB.append((C, computeSupport(C, T)))
     # print(list(range(i+1, M+1)))
     for j in range(i+1, M+1):
         # print('j=', j, C, i, T)
@@ -112,8 +114,12 @@ def computeFreq(T):
 
 
 def computeLCM(T, M, theta):
+    global patternDB
+    patternDB = []
     C = computeClosure({}, T)
     backtrack(C, 0, T, theta=theta, M=M)
+    patternDB = sorted(patternDB, key=lambda x: x[1], reverse=True)
+    print(patternDB)
 
 def read_db_from_file(path):
     d = []
@@ -181,8 +187,8 @@ def main():
     print('closuretail', computeClosureTail({2,3,4,5}, T))
     print('closuretail', computeClosureTail({1,2,7,9}, T))
 
-    T2, M = read_db_from_file('../data/itemset_mining/retail_1based.txt')
-    # computeLCM(T2, M, theta=10)
+    T2, M = read_db_from_file('../data/itemset_mining/retail_1based_500.txt')
+    computeLCM(T2, M, theta=10)
 
 if __name__ == '__main__':
     main()
