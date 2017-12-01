@@ -57,7 +57,9 @@ def computeClosureTail(P, T):
     global M
     for i in range(1, M+1):
         Z = set([j for j in range(1, i+1)])
+        print(computeClosure(P&Z, T), P)
         if computeClosure( P & Z, T ) == P:
+            print('tail', i)
             return i
     print('not found')
 
@@ -175,9 +177,12 @@ def main():
 
     print('ppc2', is_ppc2({2}, {2,3,4,5}, 2, T))
     print('ppc2', is_ppc2({2}, {2,3,4,5}, 3, T))
+    print('closure', computeClosure({4}, T))
+    print('closuretail', computeClosureTail({2,3,4,5}, T))
+    print('closuretail', computeClosureTail({1,2,7,9}, T))
 
-    T2, M = read_db_from_file('../data/itemset_mining/retail_1based_1000.txt')
-    computeLCM(T2, M, theta=10)
+    T2, M = read_db_from_file('../data/itemset_mining/retail_1based.txt')
+    # computeLCM(T2, M, theta=10)
 
 if __name__ == '__main__':
     main()
