@@ -54,10 +54,10 @@ motif    = [[0.0, 1.0, 0.0, 0.0], # C
 #             [0.0, 0.0, 0.0, 1.0]] # T
 
 seq_len  = 20
-np_train = 1000
-nn_train = 1000
-np_test  = 100
-nn_test  = 100
+np_train = 10000
+nn_train = 10000
+np_test  = 1000
+nn_test  = 1000
 
 if __name__ == '__main__':
     x_train, y_train = generate_dataset(np_train, nn_train, seq_len, motif, nuc)
